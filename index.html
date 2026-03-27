@@ -434,7 +434,7 @@
                 <div class="stat-label">Total Proyectos</div>
             </div>
             <div class="stat-card">
-                <div class="stat-number" id="validatedProjects">17</div>
+                <div class="stat-number" id="validatedProjects">26</div>
                 <div class="stat-label">Validados con TI</div>
             </div>
             <div class="stat-card">
@@ -442,8 +442,8 @@
                 <div class="stat-label">Áreas de TI</div>
             </div>
             <div class="stat-card">
-                <div class="stat-number" id="tiLeaders">6</div>
-                <div class="stat-label">Responsables TI</div>
+                <div class="stat-number" id="functionalLeaders">5</div>
+                <div class="stat-label">Líderes Funcionales</div>
             </div>
             <div class="stat-card">
                 <div class="stat-number" id="nearestDeadline">Abril 2026</div>
@@ -501,6 +501,7 @@
                             <th>Iniciativa</th>
                             <th>Área TI</th>
                             <th>Responsable TI</th>
+                            <th>Líder Funcional</th>
                             <th>Go Live</th>
                             <th>Validado</th>
                         </tr>
@@ -526,33 +527,33 @@
 
     <script>
         const projects = [
-            {area: "Proyectos", tiLeader: "Edison de la Cruz", name: "Actualización Herramienta Call Center", goLive: "September-26", validated: "No"},
-            {area: "BI", tiLeader: "Fabricio Pisco", name: "Modelo de recaudación por canal y dia.", goLive: "October-26", validated: "Sí", observations: "Se realizará con base a la nueva herramienta de TI - Snowflake - BPI, fecha estimada no se puede establecer por dependencia de MX"},
-            {area: "Proyectos", tiLeader: "Edison de la Cruz", name: "Herramienta envío de cartas de cobro (Para todos tipos de crédito)", goLive: "September-26", validated: "No"},
-            {area: "Proyectos", tiLeader: "Edison de la Cruz", name: "Herramienta envío de cartas de cobro a equipo comercial por vencidos de Fatem > 35 Dias", goLive: "September-26", validated: "No"},
-            {area: "Front Office", tiLeader: "Enrique Silva", name: "Bloqueo Formas de pagos /Bloqueo Cliente con cartera Vencida", goLive: "May-26", validated: "Sí"},
-            {area: "Front Office", tiLeader: "Enrique Silva", name: "Plataforma Integral de cobranzas end to end", goLive: "November-26", validated: "Sí"},
-            {area: "Front Office", tiLeader: "Enrique Silva", name: "Bloqueo Uso de Punteros para Canal", goLive: "June-26", validated: "Sí"},
-            {area: "Front Office", tiLeader: "Enrique Silva", name: "NC Financieras por detalle de SKU", goLive: "April-26", validated: "Sí"},
-            {area: "BI", tiLeader: "Fabricio Pisco", name: "Reporte de Notas de Créditos Tonicorp", goLive: "June-26", validated: "Sí", observations: "Es precio de reunión de inicio para requerimiento para entender"},
-            {area: "Proyectos", tiLeader: "Edison de la Cruz", name: "Herramienta para solicitar pago de multas o matriculación", goLive: "July-26", validated: "No"},
-            {area: "Proyectos", tiLeader: "Edison de la Cruz", name: "Herramienta para validación de Fletes T1 y T2", goLive: "April-26", validated: "No"},
-            {area: "Proyectos", tiLeader: "Edison de la Cruz", name: "Creación de Chatbot para servicios administrativos", goLive: "July-26", validated: "No"},
-            {area: "Proyectos", tiLeader: "Edison de la Cruz", name: "Herramienta para validación de Gasto de Combustible Diesel", goLive: "May-26", validated: "No"},
-            {area: "Proyectos", tiLeader: "Edison de la Cruz", name: "Herramienta Validación de Tarjetas de Combustible", goLive: "May-26", validated: "No"},
-            {area: "Front Office", tiLeader: "Enrique Silva", name: "AC Móvil Reparto. Liberación de Punteros de Liquidación", goLive: "November-26", validated: "Sí"},
-            {area: "Front Office", tiLeader: "Enrique Silva", name: "Reporte de Punteros de Siniestros. Detalle de motivos", goLive: "June-26", validated: "Sí"},
-            {area: "BI", tiLeader: "Erwin Borbor", name: "Desarrollo Reporte Tiempos de Liquidación. Origen Tabla X8Tiempos", goLive: "September-26", validated: "Sí"},
-            {area: "BI", tiLeader: "Erwin Borbor", name: "Reporte Control de Caducados/Canjes", goLive: "September-26", validated: "Sí"},
-            {area: "BI", tiLeader: "Fabricio Pisco", name: "Generación Universo Reporte de Punteros de Siniestros 98", goLive: "October-26", validated: "Sí"},
-            {area: "BI", tiLeader: "Wilmo Jara", name: "Universo de Cargas y Descargas", goLive: "December-26", validated: "Sí"},
-            {area: "Front Office", tiLeader: "Enrique Silva", name: "Control de Caducados mediante Identidad Digital", goLive: "May-26", validated: "Sí"},
-            {area: "Proyectos", tiLeader: "David Santos", name: "Herramienta: Check List Permisos de Funcionamiento.", goLive: "May-26", validated: "No"},
-            {area: "Proyectos", tiLeader: "Jordan LLumitaxi", name: "OCR: Reporte Web para el Chofer", goLive: "September-26", validated: "No"},
-            {area: "Sin asignar", tiLeader: "Por definir", name: "Pay Toni: Tarjeta Prepago Digital", goLive: "October-26", validated: "No"},
-            {area: "Front Office", tiLeader: "Enrique Silva", name: "Pag Poc Actualización de reglas", goLive: "May-26", validated: "Sí", observations: "REGISTRAR EN ALGUN MOMENTO LA PAPETA DE DEPÓSITO CUANDO SE TENGA"},
-            {area: "Proyectos", tiLeader: "Edison de la Cruz", name: "Check List Camiones - Despliegue otros motivos Check List", goLive: "August-26", validated: "No"},
-            {area: "Front Office", tiLeader: "Enrique Silva", name: "Creación de transacción para reporte de facturación de canjes emitidas a choferes", goLive: "April-26", validated: "Sí", observations: "Solicitud agregada en el mes de marzo por proyecto de facturación de canjes a choferes"}
+            {leader: "Victor Cornejo", area: "Proyectos", tiLeader: "Edison de la Cruz", name: "Actualización Herramienta Call Center", goLive: "September-26", validated: "Sí"},
+            {leader: "Victor Cornejo", area: "BI", tiLeader: "Fabricio Pisco", name: "Modelo de recaudación por canal y dia.", goLive: "October-26", validated: "Sí", observations: "Se realizará con base a la nueva herramienta de TI - Snowflake - BPI, fecha estimada no se puede establecer por dependencia de MX"},
+            {leader: "Victor Cornejo", area: "Proyectos", tiLeader: "Edison de la Cruz", name: "Herramienta envío de cartas de cobro (Para todos tipos de crédito)", goLive: "September-26", validated: "Sí"},
+            {leader: "Victor Cornejo", area: "Proyectos", tiLeader: "Edison de la Cruz", name: "Herramienta envío de cartas de cobro a equipo comercial por vencidos de Fatem > 35 Dias", goLive: "September-26", validated: "Sí"},
+            {leader: "Victor Cornejo", area: "Front Office", tiLeader: "Enrique Silva", name: "Bloqueo Formas de pagos /Bloqueo Cliente con cartera Vencida", goLive: "May-26", validated: "Sí"},
+            {leader: "Victor Cornejo", area: "Front Office", tiLeader: "Enrique Silva", name: "Plataforma Integral de cobranzas end to end", goLive: "November-26", validated: "Sí"},
+            {leader: "Jenny Iza", area: "Front Office", tiLeader: "Enrique Silva", name: "Bloqueo Uso de Punteros para Canal", goLive: "June-26", validated: "Sí"},
+            {leader: "Jenny Iza", area: "Front Office", tiLeader: "Enrique Silva", name: "NC Financieras por detalle de SKU", goLive: "April-26", validated: "Sí"},
+            {leader: "Jenny Iza", area: "BI", tiLeader: "Fabricio Pisco", name: "Reporte de Notas de Créditos Tonicorp", goLive: "June-26", validated: "Sí", observations: "Es precio de reunión de inicio para requerimiento para entender"},
+            {leader: "Solange Rosado", area: "Proyectos", tiLeader: "Edison de la Cruz", name: "Herramienta para solicitar pago de multas o matriculación", goLive: "July-26", validated: "Sí"},
+            {leader: "Solange Rosado", area: "Proyectos", tiLeader: "Edison de la Cruz", name: "Herramienta para validación de Fletes T1 y T2", goLive: "April-26", validated: "Sí"},
+            {leader: "Monserrate Bastidas", area: "Proyectos", tiLeader: "Edison de la Cruz", name: "Creación de Chatbot para servicios administrativos", goLive: "July-26", validated: "Sí"},
+            {leader: "Monserrate Bastidas", area: "Proyectos", tiLeader: "Edison de la Cruz", name: "Herramienta para validación de Gasto de Combustible Diesel", goLive: "May-26", validated: "Sí"},
+            {leader: "Monserrate Bastidas", area: "Proyectos", tiLeader: "Edison de la Cruz", name: "Herramienta Validación de Tarjetas de Combustible", goLive: "May-26", validated: "Sí"},
+            {leader: "Monserrate Bastidas y Jenny Iza", area: "Front Office", tiLeader: "Enrique Silva", name: "AC Móvil Reparto. Liberación de Punteros de Liquidación", goLive: "November-26", validated: "Sí"},
+            {leader: "Monserrate Bastidas y Jenny Iza", area: "Front Office", tiLeader: "Enrique Silva", name: "Reporte de Punteros de Siniestros. Detalle de motivos", goLive: "June-26", validated: "Sí"},
+            {leader: "Monserrate Bastidas y Jenny Iza", area: "BI", tiLeader: "Erwin Borbor", name: "Desarrollo Reporte Tiempos de Liquidación. Origen Tabla X8Tiempos", goLive: "September-26", validated: "Sí"},
+            {leader: "Monserrate Bastidas y Jenny Iza", area: "BI", tiLeader: "Erwin Borbor", name: "Reporte Control de Caducados/Canjes", goLive: "September-26", validated: "Sí"},
+            {leader: "Monserrate Bastidas y Jenny Iza", area: "BI", tiLeader: "Fabricio Pisco", name: "Generación Universo Reporte de Punteros de Siniestros 98", goLive: "October-26", validated: "Sí"},
+            {leader: "Monserrate Bastidas y Jenny Iza", area: "BI", tiLeader: "Wilmo Jara", name: "Universo de Cargas y Descargas", goLive: "December-26", validated: "Sí"},
+            {leader: "Jenny Iza, Monserrate Bastidas, Jimmy Lindao", area: "Front Office", tiLeader: "Enrique Silva", name: "Control de Caducados mediante Identidad Digital", goLive: "May-26", validated: "Sí"},
+            {leader: "Jenny Iza / Monserrate Bastidas", area: "Proyectos", tiLeader: "David Santos", name: "Herramienta: Check List Permisos de Funcionamiento.", goLive: "May-26", validated: "Sí"},
+            {leader: "Jenny Iza / Monserrate Bastidas", area: "Proyectos", tiLeader: "Jordan LLumitaxi", name: "OCR: Reporte Web para el Chofer", goLive: "September-26", validated: "Sí"},
+            {leader: "Sin asignar", area: "Sin asignar", tiLeader: "Por definir", name: "Pay Toni: Tarjeta Prepago Digital", goLive: "October-26", validated: "No"},
+            {leader: "Jenny Iza, Monserrate Bastidas, Victor Cornejo", area: "Front Office", tiLeader: "Enrique Silva", name: "Pag Poc Actualización de reglas", goLive: "May-26", validated: "Sí", observations: "REGISTRAR EN ALGUN MOMENTO LA PAPETA DE DEPÓSITO CUANDO SE TENGA"},
+            {leader: "Solange Rosado, Jenny Iza, Monserrate Bastidas", area: "Proyectos", tiLeader: "Edison de la Cruz", name: "Check List Camiones - Despliegue otros motivos Check List", goLive: "November-26", validated: "Sí"},
+            {leader: "Jenny Iza", area: "Front Office", tiLeader: "Enrique Silva", name: "Creación de transacción para reporte de facturación de canjes emitidas a choferes", goLive: "April-26", validated: "Sí", observations: "Solicitud agregada en el mes de marzo por proyecto de facturación de canjes a choferes"}
         ];
 
         const monthOrder = {
@@ -649,6 +650,9 @@
                                         ${p.validated === 'Sí' ? '✅ Validado' : '⏳ Pendiente validación'}
                                     </span>
                                 </div>
+                                <div class="meta-item">
+                                    👤 <strong>${p.leader}</strong>
+                                </div>
                             </div>
                             ${p.observations ? `<div class="observations">📌 ${p.observations}</div>` : ''}
                         </div>
@@ -666,6 +670,7 @@
                     <td><strong>${p.name}</strong>${p.observations ? `<br><small style="color:#f57c00">📌 ${p.observations}</small>` : ''}</td>
                     <td><span class="badge badge-area">${p.area}</span></td>
                     <td><span class="badge badge-leader">${p.tiLeader}</span></td>
+                    <td>${p.leader}</td>
                     <td>${monthNames[p.goLive]}</td>
                     <td><span class="badge ${p.validated === 'Sí' ? 'badge-validated' : 'badge-pending'}">${p.validated === 'Sí' ? '✅ Sí' : '⏳ No'}</span></td>
                 </tr>
