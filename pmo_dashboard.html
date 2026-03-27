@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PMO Dashboard - Proyectos TI Tonicorp</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            opacity: 0.9;
+            font-size: 16px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            padding: 30px;
+            background: #f8f9fa;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            text-align: center;
+            transition: transform 0.3s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .stat-number {
+            font-size: 36px;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .controls {
+            padding: 20px 30px;
+            background: white;
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            align-items: center;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .filter-group {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .filter-group label {
+            font-weight: 600;
+            color: #555;
+        }
+
+        select, input {
+            padding: 8px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        select:focus, input:focus {
+            border-color: #667eea;
+        }
+
+        .btn {
+            padding: 8px 20px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background 0.3s;
+        }
+
+        .btn:hover {
+            background: #5568d3;
+        }
+
+        .view-toggle {
+            margin-left: auto;
+            display: flex;
+            gap: 10px;
+        }
+
+        .view-btn {
+            padding: 8px 15px;
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .view-btn.active {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        .timeline-view {
+            display: none;
+        }
+
+        .timeline-view.active {
+            display: block;
+        }
+
+        .timeline {
+            position: relative;
+            padding-left: 50px;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 20px;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background: linear-gradient(to bottom, #667eea, #764ba2);
+        }
+
+        .timeline-month {
+            margin-bottom: 40px;
+        }
+
+        .month-label {
+            font-size: 20px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .month-badge {
+            background: #667eea;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 12px;
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 20px;
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            padding: 20px;
+            transition: all 0.3s;
+        }
+
+        .timeline-item:hover {
+            border-color: #667eea;
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.2);
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -43px;
+            top: 25px;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: white;
+            border: 4px solid #667eea;
+        }
+
+        .project-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .project-title {
+            font-weight: 600;
+            color: #2c3e50;
+            flex: 1;
+            font-size: 16px;
+        }
+
+        .project-meta {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-top: 10px;
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 13px;
+            color: #666;
+        }
+
+        .badge {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .badge-area {
+            background: #e3f2fd;
+            color: #1976d2;
+        }
+
+        .badge-leader {
+            background: #f3e5f5;
+            color: #7b1fa2;
+        }
+
+        .badge-validated {
+            background: #e8f5e9;
+            color: #388e3c;
+        }
+
+        .badge-pending {
+            background: #fff3e0;
+            color: #f57c00;
+        }
+
+        .table-view {
+            display: none;
+            overflow-x: auto;
+        }
+
+        .table-view.active {
+            display: block;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        thead {
+            background: #2c3e50;
+            color: white;
+        }
+
+        th {
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 13px;
+        }
+
+        td {
+            padding: 15px;
+            border-bottom: 1px solid #f0f0f0;
+            font-size: 14px;
+        }
+
+        tbody tr:hover {
+            background: #f8f9fa;
+        }
+
+        .contact-card {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+        }
+
+        .contact-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .contact-item {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+        }
+
+        .contact-name {
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+
+        .contact-role {
+            color: #666;
+            font-size: 13px;
+        }
+
+        .projects-count {
+            color: #667eea;
+            font-size: 12px;
+            margin-top: 5px;
+        }
+
+        .observations {
+            background: #fff9e6;
+            border-left: 4px solid #ffc107;
+            padding: 10px;
+            margin-top: 10px;
+            font-size: 13px;
+            border-radius: 4px;
+        }
+
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+            }
+            .controls, .view-toggle {
+                display: none;
+            }
+        }
+
+        .priority-high { border-left-color: #e74c3c; }
+        .priority-medium { border-left-color: #f39c12; }
+        .priority-low { border-left-color: #3498db; }
+
+        .kanban-view {
+            display: none;
+        }
+
+        .kanban-view.active {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .kanban-column {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 20px;
+        }
+
+        .kanban-header {
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .kanban-card {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            border-left: 4px solid #667eea;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .kanban-card:hover {
+            transform: translateX(5px);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📊 PMO Dashboard - Cartera Tonicorp</h1>
+            <p>Proyectos con TI - Handover al nuevo Coordinador</p>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-number" id="totalProjects">27</div>
+                <div class="stat-label">Total Proyectos</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="validatedProjects">17</div>
+                <div class="stat-label">Validados con TI</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="tiAreas">3</div>
+                <div class="stat-label">Áreas de TI</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="tiLeaders">6</div>
+                <div class="stat-label">Responsables TI</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="nearestDeadline">Abril 2026</div>
+                <div class="stat-label">Próximo Go Live</div>
+            </div>
+        </div>
+
+        <div class="controls">
+            <div class="filter-group">
+                <label>Área TI:</label>
+                <select id="filterArea">
+                    <option value="">Todas</option>
+                    <option value="Front Office">Front Office</option>
+                    <option value="Proyectos">Proyectos</option>
+                    <option value="BI">BI</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label>Responsable TI:</label>
+                <select id="filterLeader">
+                    <option value="">Todos</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label>Mes Go Live:</label>
+                <select id="filterMonth">
+                    <option value="">Todos</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label>Validado:</label>
+                <select id="filterValidated">
+                    <option value="">Todos</option>
+                    <option value="Sí">Sí</option>
+                    <option value="No">No</option>
+                </select>
+            </div>
+            <button class="btn" onclick="resetFilters()">🔄 Limpiar Filtros</button>
+            <div class="view-toggle">
+                <button class="view-btn active" onclick="switchView('timeline')">📅 Timeline</button>
+                <button class="view-btn" onclick="switchView('table')">📋 Tabla</button>
+                <button class="view-btn" onclick="switchView('kanban')">📌 Por Responsable TI</button>
+            </div>
+        </div>
+
+        <div class="content">
+            <div id="timelineView" class="timeline-view active">
+                <!-- Timeline se genera dinámicamente -->
+            </div>
+
+            <div id="tableView" class="table-view">
+                <table id="projectsTable">
+                    <thead>
+                        <tr>
+                            <th>Iniciativa</th>
+                            <th>Área TI</th>
+                            <th>Responsable TI</th>
+                            <th>Go Live</th>
+                            <th>Validado</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableBody">
+                        <!-- Se genera dinámicamente -->
+                    </tbody>
+                </table>
+            </div>
+
+            <div id="kanbanView" class="kanban-view">
+                <!-- Kanban se genera dinámicamente -->
+            </div>
+
+            <div class="contact-card">
+                <h3>🤝 Contactos Clave en TI</h3>
+                <div class="contact-grid" id="contactsGrid">
+                    <!-- Se genera dinámicamente -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const projects = [
+            {area: "Proyectos", tiLeader: "Edison de la Cruz", name: "Actualización Herramienta Call Center", goLive: "September-26", validated: "No"},
+            {area: "BI", tiLeader: "Fabricio Pisco", name: "Modelo de recaudación por canal y dia.", goLive: "October-26", validated: "Sí", observations: "Se realizará con base a la nueva herramienta de TI - Snowflake - BPI, fecha estimada no se puede establecer por dependencia de MX"},
+            {area: "Proyectos", tiLeader: "Edison de la Cruz", name: "Herramienta envío de cartas de cobro (Para todos tipos de crédito)", goLive: "September-26", validated: "No"},
+            {area: "Proyectos", tiLeader: "Edison de la Cruz", name: "Herramienta envío de cartas de cobro a equipo comercial por vencidos de Fatem > 35 Dias", goLive: "September-26", validated: "No"},
+            {area: "Front Office", tiLeader: "Enrique Silva", name: "Bloqueo Formas de pagos /Bloqueo Cliente con cartera Vencida", goLive: "May-26", validated: "Sí"},
+            {area: "Front Office", tiLeader: "Enrique Silva", name: "Plataforma Integral de cobranzas end to end", goLive: "November-26", validated: "Sí"},
+            {area: "Front Office", tiLeader: "Enrique Silva", name: "Bloqueo Uso de Punteros para Canal", goLive: "June-26", validated: "Sí"},
+            {area: "Front Office", tiLeader: "Enrique Silva", name: "NC Financieras por detalle de SKU", goLive: "April-26", validated: "Sí"},
+            {area: "BI", tiLeader: "Fabricio Pisco", name: "Reporte de Notas de Créditos Tonicorp", goLive: "June-26", validated: "Sí", observations: "Es precio de reunión de inicio para requerimiento para entender"},
+            {area: "Proyectos", tiLeader: "Edison de la Cruz", name: "Herramienta para solicitar pago de multas o matriculación", goLive: "July-26", validated: "No"},
+            {area: "Proyectos", tiLeader: "Edison de la Cruz", name: "Herramienta para validación de Fletes T1 y T2", goLive: "April-26", validated: "No"},
+            {area: "Proyectos", tiLeader: "Edison de la Cruz", name: "Creación de Chatbot para servicios administrativos", goLive: "July-26", validated: "No"},
+            {area: "Proyectos", tiLeader: "Edison de la Cruz", name: "Herramienta para validación de Gasto de Combustible Diesel", goLive: "May-26", validated: "No"},
+            {area: "Proyectos", tiLeader: "Edison de la Cruz", name: "Herramienta Validación de Tarjetas de Combustible", goLive: "May-26", validated: "No"},
+            {area: "Front Office", tiLeader: "Enrique Silva", name: "AC Móvil Reparto. Liberación de Punteros de Liquidación", goLive: "November-26", validated: "Sí"},
+            {area: "Front Office", tiLeader: "Enrique Silva", name: "Reporte de Punteros de Siniestros. Detalle de motivos", goLive: "June-26", validated: "Sí"},
+            {area: "BI", tiLeader: "Erwin Borbor", name: "Desarrollo Reporte Tiempos de Liquidación. Origen Tabla X8Tiempos", goLive: "September-26", validated: "Sí"},
+            {area: "BI", tiLeader: "Erwin Borbor", name: "Reporte Control de Caducados/Canjes", goLive: "September-26", validated: "Sí"},
+            {area: "BI", tiLeader: "Fabricio Pisco", name: "Generación Universo Reporte de Punteros de Siniestros 98", goLive: "October-26", validated: "Sí"},
+            {area: "BI", tiLeader: "Wilmo Jara", name: "Universo de Cargas y Descargas", goLive: "December-26", validated: "Sí"},
+            {area: "Front Office", tiLeader: "Enrique Silva", name: "Control de Caducados mediante Identidad Digital", goLive: "May-26", validated: "Sí"},
+            {area: "Proyectos", tiLeader: "David Santos", name: "Herramienta: Check List Permisos de Funcionamiento.", goLive: "May-26", validated: "No"},
+            {area: "Proyectos", tiLeader: "Jordan LLumitaxi", name: "OCR: Reporte Web para el Chofer", goLive: "September-26", validated: "No"},
+            {area: "Sin asignar", tiLeader: "Por definir", name: "Pay Toni: Tarjeta Prepago Digital", goLive: "October-26", validated: "No"},
+            {area: "Front Office", tiLeader: "Enrique Silva", name: "Pag Poc Actualización de reglas", goLive: "May-26", validated: "Sí", observations: "REGISTRAR EN ALGUN MOMENTO LA PAPETA DE DEPÓSITO CUANDO SE TENGA"},
+            {area: "Proyectos", tiLeader: "Edison de la Cruz", name: "Check List Camiones - Despliegue otros motivos Check List", goLive: "August-26", validated: "No"},
+            {area: "Front Office", tiLeader: "Enrique Silva", name: "Creación de transacción para reporte de facturación de canjes emitidas a choferes", goLive: "April-26", validated: "Sí", observations: "Solicitud agregada en el mes de marzo por proyecto de facturación de canjes a choferes"}
+        ];
+
+        const monthOrder = {
+            "April-26": 1,
+            "May-26": 2,
+            "June-26": 3,
+            "July-26": 4,
+            "August-26": 5,
+            "September-26": 6,
+            "October-26": 7,
+            "November-26": 8,
+            "December-26": 9
+        };
+
+        const monthNames = {
+            "April-26": "Abril 2026",
+            "May-26": "Mayo 2026",
+            "June-26": "Junio 2026",
+            "July-26": "Julio 2026",
+            "August-26": "Agosto 2026",
+            "September-26": "Septiembre 2026",
+            "October-26": "Octubre 2026",
+            "November-26": "Noviembre 2026",
+            "December-26": "Diciembre 2026"
+        };
+
+        function initializeFilters() {
+            const leaders = [...new Set(projects.map(p => p.tiLeader))].sort();
+            const months = [...new Set(projects.map(p => p.goLive))].sort((a, b) => monthOrder[a] - monthOrder[b]);
+            
+            const leaderSelect = document.getElementById('filterLeader');
+            leaders.forEach(leader => {
+                const option = document.createElement('option');
+                option.value = leader;
+                option.textContent = leader;
+                leaderSelect.appendChild(option);
+            });
+
+            const monthSelect = document.getElementById('filterMonth');
+            months.forEach(month => {
+                const option = document.createElement('option');
+                option.value = month;
+                option.textContent = monthNames[month];
+                monthSelect.appendChild(option);
+            });
+        }
+
+        function getFilteredProjects() {
+            const areaFilter = document.getElementById('filterArea').value;
+            const leaderFilter = document.getElementById('filterLeader').value;
+            const monthFilter = document.getElementById('filterMonth').value;
+            const validatedFilter = document.getElementById('filterValidated').value;
+
+            return projects.filter(p => {
+                if (areaFilter && p.area !== areaFilter) return false;
+                if (leaderFilter && p.tiLeader !== leaderFilter) return false;
+                if (monthFilter && p.goLive !== monthFilter) return false;
+                if (validatedFilter && p.validated !== validatedFilter) return false;
+                return true;
+            });
+        }
+
+        function renderTimeline() {
+            const filtered = getFilteredProjects();
+            const byMonth = {};
+            
+            filtered.forEach(p => {
+                if (!byMonth[p.goLive]) byMonth[p.goLive] = [];
+                byMonth[p.goLive].push(p);
+            });
+
+            const sortedMonths = Object.keys(byMonth).sort((a, b) => monthOrder[a] - monthOrder[b]);
+            
+            const html = sortedMonths.map(month => `
+                <div class="timeline-month">
+                    <div class="month-label">
+                        ${monthNames[month]}
+                        <span class="month-badge">${byMonth[month].length} proyectos</span>
+                    </div>
+                    ${byMonth[month].map(p => `
+                        <div class="timeline-item">
+                            <div class="project-header">
+                                <div class="project-title">${p.name}</div>
+                            </div>
+                            <div class="project-meta">
+                                <div class="meta-item">
+                                    <span class="badge badge-area">${p.area}</span>
+                                </div>
+                                <div class="meta-item">
+                                    <span class="badge badge-leader">🎯 ${p.tiLeader}</span>
+                                </div>
+                                <div class="meta-item">
+                                    <span class="badge ${p.validated === 'Sí' ? 'badge-validated' : 'badge-pending'}">
+                                        ${p.validated === 'Sí' ? '✅ Validado' : '⏳ Pendiente validación'}
+                                    </span>
+                                </div>
+                            </div>
+                            ${p.observations ? `<div class="observations">📌 ${p.observations}</div>` : ''}
+                        </div>
+                    `).join('')}
+                </div>
+            `).join('');
+
+            document.getElementById('timelineView').innerHTML = `<div class="timeline">${html}</div>`;
+        }
+
+        function renderTable() {
+            const filtered = getFilteredProjects();
+            const html = filtered.map(p => `
+                <tr>
+                    <td><strong>${p.name}</strong>${p.observations ? `<br><small style="color:#f57c00">📌 ${p.observations}</small>` : ''}</td>
+                    <td><span class="badge badge-area">${p.area}</span></td>
+                    <td><span class="badge badge-leader">${p.tiLeader}</span></td>
+                    <td>${monthNames[p.goLive]}</td>
+                    <td><span class="badge ${p.validated === 'Sí' ? 'badge-validated' : 'badge-pending'}">${p.validated === 'Sí' ? '✅ Sí' : '⏳ No'}</span></td>
+                </tr>
+            `).join('');
+
+            document.getElementById('tableBody').innerHTML = html;
+        }
+
+        function renderKanban() {
+            const filtered = getFilteredProjects();
+            const byLeader = {};
+            
+            filtered.forEach(p => {
+                if (!byLeader[p.tiLeader]) byLeader[p.tiLeader] = [];
+                byLeader[p.tiLeader].push(p);
+            });
+
+            const html = Object.keys(byLeader).sort().map(leader => `
+                <div class="kanban-column">
+                    <div class="kanban-header">
+                        <span>🎯 ${leader}</span>
+                        <span class="badge badge-leader">${byLeader[leader].length}</span>
+                    </div>
+                    ${byLeader[leader].map(p => `
+                        <div class="kanban-card">
+                            <div style="font-weight:600; margin-bottom:8px;">${p.name}</div>
+                            <div style="font-size:12px; color:#666; margin-bottom:5px;">
+                                <span class="badge badge-area">${p.area}</span>
+                            </div>
+                            <div style="font-size:12px; color:#666;">
+                                📅 ${monthNames[p.goLive]}
+                            </div>
+                            <div style="font-size:12px; color:#666; margin-top:5px;">
+                                ${p.validated === 'Sí' ? '✅ Validado' : '⏳ Sin validar'}
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+            `).join('');
+
+            document.getElementById('kanbanView').innerHTML = html;
+        }
+
+        function renderContacts() {
+            const leaders = {};
+            projects.forEach(p => {
+                if (!leaders[p.tiLeader]) {
+                    leaders[p.tiLeader] = { area: p.area, count: 0 };
+                }
+                leaders[p.tiLeader].count++;
+            });
+
+            const html = Object.keys(leaders).sort().map(leader => `
+                <div class="contact-item">
+                    <div class="contact-name">🎯 ${leader}</div>
+                    <div class="contact-role">${leaders[leader].area}</div>
+                    <div class="projects-count">${leaders[leader].count} proyectos asignados</div>
+                </div>
+            `).join('');
+
+            document.getElementById('contactsGrid').innerHTML = html;
+        }
+
+        function updateStats() {
+            const filtered = getFilteredProjects();
+            document.getElementById('totalProjects').textContent = filtered.length;
+            document.getElementById('validatedProjects').textContent = filtered.filter(p => p.validated === 'Sí').length;
+        }
+
+        function switchView(view) {
+            document.querySelectorAll('.view-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.timeline-view, .table-view, .kanban-view').forEach(v => v.classList.remove('active'));
+            
+            event.target.classList.add('active');
+            document.getElementById(view + 'View').classList.add('active');
+        }
+
+        function resetFilters() {
+            document.getElementById('filterArea').value = '';
+            document.getElementById('filterLeader').value = '';
+            document.getElementById('filterMonth').value = '';
+            document.getElementById('filterValidated').value = '';
+            renderAll();
+        }
+
+        function renderAll() {
+            renderTimeline();
+            renderTable();
+            renderKanban();
+            updateStats();
+        }
+
+        // Event listeners
+        document.getElementById('filterArea').addEventListener('change', renderAll);
+        document.getElementById('filterLeader').addEventListener('change', renderAll);
+        document.getElementById('filterMonth').addEventListener('change', renderAll);
+        document.getElementById('filterValidated').addEventListener('change', renderAll);
+
+        // Initialize
+        initializeFilters();
+        renderAll();
+        renderContacts();
+    </script>
+</body>
+</html>
